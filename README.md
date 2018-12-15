@@ -14,15 +14,19 @@ This application is designed to be able to be used to record scores and compute 
     * Warnings
     * Dismissal of last entered score
       * Authentication to prevent tampering?
+    * Automatically end bout when score cap reached
   * Timer
     * Starting and stopping in line with referee consultation
     * Warning when time limit about to be exceeded
       * 3 min max run time
+        * Automatically finish bout when time exceeded
       * 10 second warning prior to time expiration for last exchange
   * Support for calculation of bout pairings
     * Round-robin pool
     * Swiss system
     * Others?
+    * Display past and upcoming bouts
+      * Highlight current bout
   * Support for multi-round matchups
     * Pool stage, elimination stage, etc
   * Support for input from multiple pools performed on other machines

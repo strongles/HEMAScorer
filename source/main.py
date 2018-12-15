@@ -1,6 +1,6 @@
 import sys
-from PyQt5 import QtCore, QtWidgets
-from PyQt5.QtWidgets import QMainWindow, QLabel, QGridLayout, QWidget, QPushButton
+from PyQt5 import QtCore, QtWidgets, QtGui
+from PyQt5.QtWidgets import QMainWindow, QLabel, QGridLayout, QWidget, QPushButton, QCheckBox, QHBoxLayout, QVBoxLayout
 from PyQt5.QtCore import QSize
 
 
@@ -14,17 +14,7 @@ class HelloWindow(QMainWindow):
         central_widget = QWidget(self)
         self.setCentralWidget(central_widget)
 
-        grid_layout = QGridLayout(self)
-        central_widget.setLayout(grid_layout)
-
-        push_button = QPushButton(self)
-        push_button.clicked.connect(self.button_action)
-        push_button.resize(50, 50)
-        push_button.move(50, 50)
-
-        title = QLabel("Hello World from PyQt", self)
-        title.setAlignment(QtCore.Qt.AlignCenter)
-        grid_layout.addWidget(title, 0, 0)
+        central_widget.setLayout(self.construct_main_panel())
 
     @staticmethod
     def button_action():
@@ -35,6 +25,7 @@ class HelloWindow(QMainWindow):
         Menus for larger-scale operations
         - Setup of new pool
         - Connect to network of scoring machines on local network
+        - "How to" section to train new users
         """
 
     def create_display(self):
@@ -46,6 +37,25 @@ class HelloWindow(QMainWindow):
         - Timer panel
         """
 
+    def construct_main_panel(self):
+        """
+        This will contain the information surrounding the scoring for both competitors
+        """
+        red_fencer_panel = self.construct_scoring_panel("red")
+        blue_fencer_panel = self.construct_scoring_panel("blue")
+        score_double_box = QCheckBox("Double", self)
+        submit_button = QPushButton("Submit", self)
+        undo_last_exchange_button = QPushButton("Undo Last", self)
+        main_panel_layout = QHBoxLayout(self)
+        main_panel_layout.addLayout(red_fencer_panel)
+        main_panel_layout.addWidget(score_double_box)
+        main_panel_layout.addLayout(blue_fencer_panel)
+        main_panel_wrapper = QVBoxLayout(self)
+        main_panel_wrapper.addLayout(main_panel_layout)
+        main_panel_wrapper.addWidget(submit_button)
+        main_panel_wrapper.addWidget(undo_last_exchange_button)
+        return main_panel_wrapper
+
     def construct_scoring_panel(self, competitor):
         """
         Set up a panel to:
@@ -54,11 +64,23 @@ class HelloWindow(QMainWindow):
         - Create score modification buttons
           - Add
           - Subtract
-          - Submit
-          - Dismiss last score
-        - "Double" checkbox
-        - "No exchange" button?
         """
+        bout_score_label = QLabel(str(0).rjust(2, "0"), self)
+        bout_score_label.setFont(QtGui.QFont("Digital-7", 200, QtGui.QFont.Bold))
+        bout_score_label.setStyleSheet(f"background-color: {competitor}")
+        exchange_score_label = QLabel(str(0).rjust(2, "0"), self)
+        exchange_score_label.setFont(QtGui.QFont("Digital-7", 200, QtGui.QFont.Bold))
+        exchange_score_label.setStyleSheet(f"background-color: {competitor}")
+        score_plus_button = QPushButton("+", self)
+        score_minus_button = QPushButton("-", self)
+        scoring_layout = QVBoxLayout(self)
+        button_layout = QHBoxLayout(self)
+        scoring_layout.addWidget(bout_score_label)
+        scoring_layout.addWidget(exchange_score_label)
+        button_layout.addWidget(score_plus_button)
+        button_layout.addWidget(score_minus_button)
+        scoring_layout.addLayout(button_layout)
+        return scoring_layout
 
 
 if __name__ == "__main__":
