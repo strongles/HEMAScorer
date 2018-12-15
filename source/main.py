@@ -4,12 +4,12 @@ from PyQt5.QtWidgets import QMainWindow, QLabel, QGridLayout, QWidget, QPushButt
 from PyQt5.QtCore import QSize
 
 
-class HelloWindow(QMainWindow):
+class ScorerWindow(QMainWindow):
     def __init__(self):
         QMainWindow.__init__(self)
 
         self.setMinimumSize(QSize(640, 480))
-        self.setWindowTitle("Hello world")
+        self.setWindowTitle("HEMAScorer")
 
         central_widget = QWidget(self)
         self.setCentralWidget(central_widget)
@@ -69,10 +69,13 @@ class HelloWindow(QMainWindow):
         bout_score_label.setFont(QtGui.QFont("Digital-7", 200, QtGui.QFont.Bold))
         bout_score_label.setStyleSheet(f"background-color: {competitor}")
         exchange_score_label = QLabel(str(0).rjust(2, "0"), self)
-        exchange_score_label.setFont(QtGui.QFont("Digital-7", 200, QtGui.QFont.Bold))
+        exchange_score_label.setFont(QtGui.QFont("Digital-7 Mono", 200, QtGui.QFont.Bold))
         exchange_score_label.setStyleSheet(f"background-color: {competitor}")
         score_plus_button = QPushButton("+", self)
         score_minus_button = QPushButton("-", self)
+
+        score_plus_button.clicked.connect(lambda: self.increment_label_score(exchange_score_label))
+        score_minus_button.clicked.connect(lambda: self.decrement_label_score(exchange_score_label))
         scoring_layout = QVBoxLayout(self)
         button_layout = QHBoxLayout(self)
         scoring_layout.addWidget(bout_score_label)
@@ -82,9 +85,21 @@ class HelloWindow(QMainWindow):
         scoring_layout.addLayout(button_layout)
         return scoring_layout
 
+    @staticmethod
+    def increment_label_score(label):
+        current_score = int(label.text())
+        label.setText(str(current_score + 1).rjust(2, "0"))
+        label.repaint()
+
+    @staticmethod
+    def decrement_label_score(label):
+        current_score = int(label.text())
+        label.setText(str(current_score - 1).rjust(2, "0"))
+        label.repaint()
+
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
-    mainWin = HelloWindow()
+    mainWin = ScorerWindow()
     mainWin.show()
     sys.exit(app.exec_())
